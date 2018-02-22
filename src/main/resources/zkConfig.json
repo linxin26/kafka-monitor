@@ -1,0 +1,6 @@
+{
+   "connectIp" : "127.0.0.1:2181",
+   "SessionTimeoutMs" : "3000",
+   "ConnectionTimeoutMs" : "3000",
+   "RetryOneTime" : "3000"
+}

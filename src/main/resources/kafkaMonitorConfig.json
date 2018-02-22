@@ -1,0 +1,30 @@
+{
+  "host": "127.0.0.1",
+  "port": 5050,
+  "monitorTopic": "monitor-topic",
+  "jmxReporterPrefix": "kfk.service",
+  "producer": {
+    "produceDelay": "2000",
+    "partitionCheckDelay": "30000"
+  },
+  "consume": {
+    "delayedTime": "10000",
+    "group.id": "group1"
+  },
+  "zookeeper": {
+    "host": "127.0.0.1:2181",
+    "SessionTimeoutMs": "3000",
+    "ConnectionTimeoutMs": "3000",
+    "RetryOneTime": "3000"
+  },
+  "kafka": {
+    "enable.auto.commit": "true",
+    "auto.commit.interval.ms": "1000",
+    "session.timeout.ms": "30000",
+    "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer",
+    "value.deserializer": "org.apache.kafka.common.serialization.StringDeserializer",
+    "key.serializer": "org.apache.kafka.common.serialization.StringSerializer",
+    "value.serializer": "org.apache.kafka.common.serialization.StringSerializer",
+    "group.id": "monitor"
+  }
+}
