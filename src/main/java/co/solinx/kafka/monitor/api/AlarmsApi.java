@@ -4,10 +4,9 @@ import co.solinx.kafka.monitor.core.service.KafkaBaseInfoService;
 import co.solinx.kafka.monitor.model.Topic;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import java.util.List;
 
 /**
@@ -18,13 +17,14 @@ import java.util.List;
  * Copyright (c) 2015 by solinx
  * @date 2017/12/27.
  */
-@Path("/alarmServlet")
+@RestController
+@RequestMapping("/data/alarmServlet")
 public class AlarmsApi extends AbstractApi {
 
     private static KafkaBaseInfoService service = KafkaBaseInfoService.getInstance();
 
-    @GET
-    public String alarms(@QueryParam("callback") String callback) {
+    @RequestMapping
+    public String alarms(String callback) {
 
         try {
             List<Topic> topicList = service.getTopics();

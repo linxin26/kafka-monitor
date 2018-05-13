@@ -7,8 +7,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,15 +21,16 @@ import java.util.List;
  * Copyright (c) 2015 by solinx
  * @date 2017/12/27.
  */
-@Path("/topicServlet")
+@RestController
+@RequestMapping("/data/topicServlet")
 public class TopicsApi extends AbstractApi {
 
     private KafkaBaseInfoService service = KafkaBaseInfoService.getInstance();
     private TopicService topicService = new TopicService();
     private final static Logger logger = LoggerFactory.getLogger(TopicsApi.class);
 
-    @GET
-    public String topics(@QueryParam("callback") String callback) {
+    @RequestMapping
+    public String topics(String callback) {
         List<Topic> topicList = service.getTopics();
 
         JSONArray array = new JSONArray();
@@ -53,9 +57,8 @@ public class TopicsApi extends AbstractApi {
         return formatData(callback);
     }
 
-    @GET
-    @Path("summary")
-    public String summary(@QueryParam("callback") String callback) {
+    @RequestMapping("/summary")
+    public String summary(String callback) {
 
         List<Topic> topicList = service.getTopics();
         JSONObject result = new JSONObject();
@@ -67,9 +70,8 @@ public class TopicsApi extends AbstractApi {
         return formatData(callback);
     }
 
-    @GET
-    @Path("{topicName}")
-    public String topic(@PathParam("topicName") String topicName, @QueryParam("callback") String callback) {
+    @RequestMapping(value = "/{topicName}", method = RequestMethod.GET)
+    public String topic(@PathVariable String topicName, String callback) {
 
         Topic topic = service.getTopic(topicName);
         JSONObject jsonObject = new JSONObject();
@@ -86,11 +88,10 @@ public class TopicsApi extends AbstractApi {
         return formatData(callback);
     }
 
-    @GET
-    @Path("create")
-    public String create(@QueryParam("topic") String topic,
-                         @QueryParam("replicaFactor") int replicaFactor,
-                         @QueryParam("partitions") int partitions, @QueryParam("callback") String callback) {
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    public String create(String topic,
+                         int replicaFactor,
+                         int partitions, String callback) {
 
         try {
             topicService.createTopic(topic, Integer.valueOf(partitions)
@@ -105,9 +106,8 @@ public class TopicsApi extends AbstractApi {
         return formatData(callback);
     }
 
-    @GET
-    @Path("delete")
-    public String delete(@QueryParam("topic") String topic, @QueryParam("callback") String callback) {
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String delete(String topic, String callback) {
         topicService.deleteTopic(topic);
         return formatData(callback);
     }

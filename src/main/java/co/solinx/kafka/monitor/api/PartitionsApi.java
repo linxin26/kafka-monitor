@@ -5,10 +5,9 @@ import co.solinx.kafka.monitor.model.Partition;
 import co.solinx.kafka.monitor.model.Topic;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import java.util.Arrays;
 
 /**
@@ -17,14 +16,15 @@ import java.util.Arrays;
  * Copyright (c) 2015 by solinx
  * @date 2017/12/27.
  */
-@Path("/partitionServlet")
+@RestController
+@RequestMapping("/data/partitionServlet")
 public class PartitionsApi extends AbstractApi {
 
     private KafkaBaseInfoService service = KafkaBaseInfoService.getInstance();
 
 
-    @GET
-    public String partition(@QueryParam("topicName") String topicName, @QueryParam("callback") String callback) {
+    @RequestMapping
+    public String partition(String topicName, String callback) {
 
         Topic topic = service.getTopic(topicName);
         JSONArray array = new JSONArray();

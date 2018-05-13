@@ -5,10 +5,9 @@ import co.solinx.kafka.monitor.core.service.KafkaBaseInfoService;
 import co.solinx.kafka.monitor.model.Broker;
 import co.solinx.kafka.monitor.model.Topic;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import java.util.List;
 
 /**
@@ -17,13 +16,14 @@ import java.util.List;
  * Copyright (c) 2015 by solinx
  * @date 2017/12/27.
  */
-@Path("/kafkaInfoServlet")
+@RestController
+@RequestMapping("/data/kafkaInfoServlet")
 public class kafkaInfoApi extends AbstractApi {
 
     KafkaBaseInfoService service = KafkaBaseInfoService.getInstance();
 
-    @GET
-    public String kafkaInfo(@QueryParam("callback") String callback) {
+    @RequestMapping
+    public String kafkaInfo(String callback) {
 
         List<Broker> brokersMap = service.getBrokers();
         List<Topic> topicList = service.getTopics();

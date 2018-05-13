@@ -131,6 +131,7 @@ public class KafkaBaseInfoService {
      * @param topic
      */
     private void mergeTopic(Topic topic) {
+        //todo 需考虑topicList为空的情况
         Topic tm = topicList.stream().filter(m -> m.getName().equals(topic.getName())).findFirst().get();
         topic.getPartitionMap().values().stream().forEach((t) -> {
             if (t.getLeaderId() == -1) {

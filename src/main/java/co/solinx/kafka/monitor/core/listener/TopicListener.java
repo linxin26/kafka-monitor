@@ -32,7 +32,8 @@ public class TopicListener implements TreeCacheListener{
 
             }
             String path = data.getPath();
-            if (path.contains(ZkUtils.BrokerTopicsPath() + "/") && (!path.contains("partitions"))) {
+            //判断是否为topics节点
+            if (path.contains(String.format("%s/",ZkUtils.BrokerTopicsPath())) && (!path.contains("partitions"))) {
                 Topic topic = JSONObject.parseObject(data.getData(), Topic.class);
                 String name = path.substring(path.lastIndexOf("/") + 1, path.length());
                 topic.setName(name);

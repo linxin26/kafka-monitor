@@ -1,6 +1,5 @@
 package co.solinx.kafka.monitor;
 
-import co.solinx.kafka.monitor.common.WebUI;
 import co.solinx.kafka.monitor.core.service.ConfigService;
 import co.solinx.kafka.monitor.core.service.InitService;
 
@@ -17,9 +16,9 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
 
-        WebUI webUI = new WebUI(ConfigService.monitorConfig.getHost(), ConfigService.monitorConfig.getPort(), "WebUi", "/");
-
-        webUI.bind();
+//        WebUI webUI = new WebUI(ConfigService.monitorConfig.getHost(), ConfigService.monitorConfig.getPort(), "WebUi", "/");
+//
+//        webUI.bind();
         initMonitorService();
     }
 

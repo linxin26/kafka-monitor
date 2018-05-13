@@ -2,19 +2,18 @@ package co.solinx.kafka.monitor.api;
 
 import co.solinx.kafka.monitor.core.service.MetricsReportService;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 
-@Path("/metricsServlet")
+@RestController
+@RequestMapping("/data/metricsServlet")
 public class MetricsApi extends AbstractApi {
 
-    @GET
-    @Path("{type}")
-    public String metrics(@PathParam("type") String type,
-                          @QueryParam("callback") String callback) {
+    @RequestMapping("/{type}")
+    public String metrics(@PathVariable("type") String type,
+                          String callback) {
 
         MetricsReportService metricsServlet = MetricsReportService.getMetricsService();
         JSONObject resultList = new JSONObject();

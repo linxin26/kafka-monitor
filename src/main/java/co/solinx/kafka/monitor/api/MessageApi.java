@@ -3,21 +3,21 @@ package co.solinx.kafka.monitor.api;
 import co.solinx.kafka.monitor.core.service.MessageService;
 import co.solinx.kafka.monitor.model.Message;
 import com.alibaba.fastjson.JSONArray;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import java.util.List;
 
-@Path("/messageServlet")
+@RestController
+@RequestMapping("/data/messageServlet")
 public class MessageApi extends AbstractApi {
 
-    @GET
-    public String message(@QueryParam("topic") String topicName,
-                          @QueryParam("partition") int partition,
-                          @QueryParam("offset") int offset,
-                          @QueryParam("messageSum") int messageSum,
-                          @QueryParam("callback") String callback) {
+    @RequestMapping
+    public String message( String topicName,
+                          int partition,
+                          int offset,
+                          int messageSum,
+                          String callback) {
 
         MessageService service = new MessageService();
 

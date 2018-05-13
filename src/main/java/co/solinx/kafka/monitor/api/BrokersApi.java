@@ -6,11 +6,11 @@ import co.solinx.kafka.monitor.model.Topic;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import java.util.List;
 
 /**
@@ -22,14 +22,15 @@ import java.util.List;
  * @date 2017/12/26.
  */
 
-@Path("/brokerServlet")
+@RestController
+@RequestMapping("/data/brokerServlet")
 public class BrokersApi extends AbstractApi {
 
     private Logger logger = LoggerFactory.getLogger(BrokersApi.class);
     private KafkaBaseInfoService service = KafkaBaseInfoService.getInstance();
 
-    @GET
-    public String brokers(@QueryParam("callback") String callback) {
+    @RequestMapping
+    public String brokers(String callback) {
         List<Broker> brokerList = service.getBrokers();
 
         pageData.setData(brokerList);
@@ -37,9 +38,8 @@ public class BrokersApi extends AbstractApi {
         return formatData(callback);
     }
 
-    @GET
-    @Path("{id}")
-    public String getBrokerById(@PathParam("id") int id, @QueryParam("callback") String callback) {
+    @RequestMapping(value = "/{id}",method= RequestMethod.GET)
+    public String getBrokerById(@PathVariable int id,String callback) {
         Broker broker = service.getBrokerById(id);
         List<Topic> topicList = service.getTopics();
         int partitionCount = 0;
@@ -58,9 +58,8 @@ public class BrokersApi extends AbstractApi {
         return formatData(callback);
     }
 
-    @GET
-    @Path("summary")
-    public String getSummary(@QueryParam("callback") String callback) {
+    @RequestMapping("/summary")
+    public String getSummary(String callback) {
 
         List<Broker> brokerList = service.getBrokers();
         JSONObject result = new JSONObject();

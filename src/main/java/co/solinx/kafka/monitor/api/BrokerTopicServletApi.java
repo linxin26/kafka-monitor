@@ -7,11 +7,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -23,15 +22,15 @@ import java.util.stream.Collectors;
  * Copyright (c) 2015 by solinx
  * @date 2017/12/27.
  */
-@Path("/brokerTopicServlet")
+@RestController
+@RequestMapping("/data/brokerTopicServlet")
 public class BrokerTopicServletApi extends AbstractApi {
 
     private static KafkaBaseInfoService service = KafkaBaseInfoService.getInstance();
     private Logger logger = LoggerFactory.getLogger(BrokerTopicServletApi.class);
 
-    @GET
-    @Path("{brokerID}")
-    public String topic(@PathParam("brokerID") int brokerID, @QueryParam("callback") String callback) {
+    @RequestMapping("/{brokerID}")
+    public String topic(@PathVariable int brokerID, String callback) {
         List<Topic> topicList = service.getTopics();
         JSONArray array = new JSONArray();
         for (Topic topic :
