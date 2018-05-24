@@ -6,14 +6,13 @@ import co.solinx.kafka.monitor.core.consumer.MonitorConsumer;
 import co.solinx.kafka.monitor.core.consumer.MonitorConsumerRecord;
 import org.apache.kafka.common.MetricName;
 import org.apache.kafka.common.metrics.*;
-import org.apache.kafka.common.metrics.stats.Avg;
-import org.apache.kafka.common.metrics.stats.Max;
-import org.apache.kafka.common.metrics.stats.Rate;
-import org.apache.kafka.common.metrics.stats.Total;
+import org.apache.kafka.common.metrics.stats.*;
 import org.apache.kafka.common.utils.SystemTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -106,7 +105,6 @@ public class ConsumerService {
                     sensor.recordsLost.record(index - nextIndex);
                     nextIndexs.put(msgPartition, index + 1);
                 }
-
             } catch (Exception e) {
                 sensor.consumerError.record();
                 logger.warn("{}", e);
@@ -146,7 +144,27 @@ public class ConsumerService {
             recordsDuplicated.add(new MetricName("records-duplicated-total", METRIC_GROUP_NAME, "The total number of records that are duplicated", tags), new Total());
 
             recordsDelay = metrics.sensor("records-delay");
-            recordsDelay.add(new MetricName("records-delay-ms-avg", METRIC_GROUP_NAME, "The average latency of records from producer to consumer", tags), new Avg());
+            recordsDelay.add(new MetricName("records-delay-ms-avg", METRIC_GROUP_NAME, "The average latency of records from producer to consumer", tags), new SampledStat(0) {
+                @Override
+                protected void update(Sample sample, MetricConfig config, double value, long timeMs) {
+                    sample.value += value;
+                }
+
+                @Override
+                public double combine(List<Sample> samples, MetricConfig config, long now) {
+                    double total = 0.0;
+                    double count = 0;
+                    for (int i = 0; i < samples.size(); i++) {
+                        Sample s = samples.get(i);
+                        total += s.value;
+                        count += s.eventCount;
+                    }
+                    BigDecimal bTotal = new BigDecimal(Double.toString(total));
+                    BigDecimal bCount = new BigDecimal(Double.toString(count));
+
+                    return count == 0 ? 0 : bTotal.divide(bCount, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
+                }
+            });
             recordsDelay.add(new MetricName("records-delay-ms-max", METRIC_GROUP_NAME, "The maximum latency of records from producer to consumer", tags), new Max());
 
             recordsLost = metrics.sensor("records-lost");
@@ -165,15 +183,17 @@ public class ConsumerService {
                         double recordsLostRate = sensor.metrics.metrics().get(new MetricName("records-lost-rate", METRIC_GROUP_NAME, tags)).value();
                         double recordsDelayedRate = sensor.metrics.metrics().get(new MetricName("records-delayed-rate", METRIC_GROUP_NAME, tags)).value();
 
-                        if (new Double(recordsLostRate).isNaN())
+                        if (new Double(recordsLostRate).isNaN()) {
                             recordsLostRate = 0;
-                        if (new Double(recordsDelayedRate).isNaN())
+                        }
+                        if (new Double(recordsDelayedRate).isNaN()) {
                             recordsDelayedRate = 0;
+                        }
 
                         double consumeAvailability = recordsConsumedRate + recordsLostRate > 0 ?
                                 (recordsConsumedRate - recordsDelayedRate) / (recordsConsumedRate + recordsLostRate) : 0;
-
-                        return consumeAvailability;
+                          BigDecimal bg = new BigDecimal(consumeAvailability);
+                        return bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
                     });
 
         }

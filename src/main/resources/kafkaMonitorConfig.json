@@ -12,7 +12,7 @@
     "group.id": "group1"
   },
   "zookeeper": {
-    "host": "127.0.0.1:2181",
+    "host": "127.0.0.1:12181",
     "SessionTimeoutMs": "3000",
     "ConnectionTimeoutMs": "3000",
     "RetryOneTime": "3000"
