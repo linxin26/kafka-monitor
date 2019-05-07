@@ -13,7 +13,7 @@ import java.util.List;
 public class MessageApi extends AbstractApi {
 
     @RequestMapping
-    public String message( String topicName,
+    public String message( String topic,
                           int partition,
                           int offset,
                           int messageSum,
@@ -21,7 +21,7 @@ public class MessageApi extends AbstractApi {
 
         MessageService service = new MessageService();
 
-        List<Message> messageList = service.getMesage(topicName, partition, offset, messageSum);
+        List<Message> messageList = service.getMesage(topic, partition, offset, messageSum);
         JSONArray array = new JSONArray();
         for (Message message :
                 messageList) {
