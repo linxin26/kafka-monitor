@@ -13,10 +13,14 @@ import lombok.Data;
 public class PageData {
 
     private Object data;
-    private int status;
-    private String error;
+    private int status=200;
+    private String error=null;
     private JSONObject extend;
 
+    public PageData() {
+        this.setStatus(200);
+        this.setExtend(new JSONObject());
+    }
 
     @Override
     public String toString() {
