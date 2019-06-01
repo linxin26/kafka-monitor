@@ -1,6 +1,7 @@
 package co.solinx.kafka.monitor.api;
 
 import co.solinx.kafka.monitor.core.service.KafkaBaseInfoService;
+import co.solinx.kafka.monitor.model.PageData;
 import co.solinx.kafka.monitor.model.Partition;
 import co.solinx.kafka.monitor.model.Topic;
 import com.alibaba.fastjson.JSONArray;
@@ -31,6 +32,7 @@ public class BrokerTopicServletApi extends AbstractApi {
 
     @RequestMapping("/{brokerID}")
     public String topic(@PathVariable int brokerID, String callback) {
+        pageData = new PageData();
         List<Topic> topicList = service.getTopics();
         JSONArray array = new JSONArray();
         for (Topic topic :
@@ -46,7 +48,7 @@ public class BrokerTopicServletApi extends AbstractApi {
             array.add(topicObj);
         }
         pageData.setData(array);
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
 }

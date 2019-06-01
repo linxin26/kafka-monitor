@@ -1,6 +1,7 @@
 package co.solinx.kafka.monitor.api;
 
 import co.solinx.kafka.monitor.core.service.KafkaBaseInfoService;
+import co.solinx.kafka.monitor.model.PageData;
 import co.solinx.kafka.monitor.model.Partition;
 import co.solinx.kafka.monitor.model.Topic;
 import com.alibaba.fastjson.JSONArray;
@@ -25,7 +26,7 @@ public class PartitionsApi extends AbstractApi {
 
     @RequestMapping
     public String partition(String topicName, String callback) {
-
+        pageData = new PageData();
         Topic topic = service.getTopic(topicName);
         JSONArray array = new JSONArray();
         for (Partition tp :
@@ -48,7 +49,6 @@ public class PartitionsApi extends AbstractApi {
             array.add(part);
         }
         pageData.setData(array);
-
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 }

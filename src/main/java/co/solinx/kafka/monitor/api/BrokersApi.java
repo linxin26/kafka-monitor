@@ -2,6 +2,7 @@ package co.solinx.kafka.monitor.api;
 
 import co.solinx.kafka.monitor.core.service.KafkaBaseInfoService;
 import co.solinx.kafka.monitor.model.Broker;
+import co.solinx.kafka.monitor.model.PageData;
 import co.solinx.kafka.monitor.model.Topic;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
@@ -31,15 +32,16 @@ public class BrokersApi extends AbstractApi {
 
     @RequestMapping
     public String brokers(String callback) {
+        pageData = new PageData();
         List<Broker> brokerList = service.getBrokers();
 
         pageData.setData(brokerList);
-
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
     @RequestMapping(value = "/{id}",method= RequestMethod.GET)
     public String getBrokerById(@PathVariable int id,String callback) {
+        pageData = new PageData();
         Broker broker = service.getBrokerById(id);
         List<Topic> topicList = service.getTopics();
         int partitionCount = 0;
@@ -54,21 +56,19 @@ public class BrokersApi extends AbstractApi {
         extend.put("partitionCount", partitionCount);
         extend.put("topicCount", topicList.size());
         pageData.setExtend(extend);
-
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
     @RequestMapping("/summary")
     public String getSummary(String callback) {
-
+        pageData = new PageData();
         List<Broker> brokerList = service.getBrokers();
         JSONObject result = new JSONObject();
         result.put("brokerTotal", brokerList.size());
         result.put("brokerAbleTotal", brokerList.size());
 
         pageData.setData(result);
-
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
 }

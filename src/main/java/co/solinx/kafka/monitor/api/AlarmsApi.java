@@ -1,6 +1,7 @@
 package co.solinx.kafka.monitor.api;
 
 import co.solinx.kafka.monitor.core.service.KafkaBaseInfoService;
+import co.solinx.kafka.monitor.model.PageData;
 import co.solinx.kafka.monitor.model.Topic;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -25,7 +26,7 @@ public class AlarmsApi extends AbstractApi {
 
     @RequestMapping
     public String alarms(String callback) {
-
+        pageData = new PageData();
         try {
             List<Topic> topicList = service.getTopics();
 
@@ -46,7 +47,7 @@ public class AlarmsApi extends AbstractApi {
             pageData.setStatus(500);
             pageData.setError(e.getMessage());
         }
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
 }

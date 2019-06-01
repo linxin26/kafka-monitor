@@ -1,6 +1,7 @@
 package co.solinx.kafka.monitor.api;
 
 import co.solinx.kafka.monitor.core.service.MetricsReportService;
+import co.solinx.kafka.monitor.model.PageData;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,7 @@ public class MetricsApi extends AbstractApi {
     @RequestMapping("/{type}")
     public String metrics(@PathVariable("type") String type,
                           String callback) {
-
+        pageData = new PageData();
         MetricsReportService metricsServlet = MetricsReportService.getMetricsService();
         JSONObject resultList = new JSONObject();
 
@@ -42,9 +43,7 @@ public class MetricsApi extends AbstractApi {
         }
 
         pageData.setData(resultList);
-
-
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
 }

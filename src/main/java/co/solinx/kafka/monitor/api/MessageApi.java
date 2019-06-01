@@ -2,6 +2,7 @@ package co.solinx.kafka.monitor.api;
 
 import co.solinx.kafka.monitor.core.service.MessageService;
 import co.solinx.kafka.monitor.model.Message;
+import co.solinx.kafka.monitor.model.PageData;
 import com.alibaba.fastjson.JSONArray;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,9 +19,8 @@ public class MessageApi extends AbstractApi {
                           int offset,
                           int messageSum,
                           String callback) {
-
+        pageData = new PageData();
         MessageService service = new MessageService();
-
         List<Message> messageList = service.getMesage(topic, partition, offset, messageSum);
         JSONArray array = new JSONArray();
         for (Message message :
@@ -28,7 +28,7 @@ public class MessageApi extends AbstractApi {
             array.add(message);
         }
         pageData.setData(array);
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
 }

@@ -3,6 +3,7 @@ package co.solinx.kafka.monitor.api;
 import co.solinx.kafka.monitor.core.service.ConfigService;
 import co.solinx.kafka.monitor.core.service.KafkaBaseInfoService;
 import co.solinx.kafka.monitor.model.Broker;
+import co.solinx.kafka.monitor.model.PageData;
 import co.solinx.kafka.monitor.model.Topic;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ public class kafkaInfoApi extends AbstractApi {
 
     @RequestMapping
     public String kafkaInfo(String callback) {
-
+        pageData = new PageData();
         List<Broker> brokersMap = service.getBrokers();
         List<Topic> topicList = service.getTopics();
         JSONObject zkConfigObj = ConfigService.rootObj;
@@ -39,7 +40,7 @@ public class kafkaInfoApi extends AbstractApi {
         extend.put("brokerNum", brokersMap.size());
         extend.put("zkConfig", zkConfigObj);
         pageData.setExtend(extend);
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
     public boolean clusterState(List<Topic> topicList) {

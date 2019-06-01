@@ -2,6 +2,7 @@ package co.solinx.kafka.monitor.api;
 
 import co.solinx.kafka.monitor.core.service.KafkaBaseInfoService;
 import co.solinx.kafka.monitor.core.service.TopicService;
+import co.solinx.kafka.monitor.model.PageData;
 import co.solinx.kafka.monitor.model.Topic;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -32,7 +33,7 @@ public class TopicsApi extends AbstractApi {
     @RequestMapping
     public String topics(String callback) {
         List<Topic> topicList = service.getTopics();
-
+        pageData = new PageData();
         JSONArray array = new JSONArray();
         for (Topic
                 topic : topicList) {
@@ -54,24 +55,24 @@ public class TopicsApi extends AbstractApi {
         }
 
         pageData.setData(array);
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
     @RequestMapping("/summary")
     public String summary(String callback) {
-
+        pageData = new PageData();
         List<Topic> topicList = service.getTopics();
         JSONObject result = new JSONObject();
         result.put("topicTotal", topicList.size());
         result.put("partitionTotal", topicList.stream().mapToInt((t) -> t.getPartitionMap().size()).sum());
 
         pageData.setData(result);
-
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
     @RequestMapping(value = "/{topicName}", method = RequestMethod.GET)
     public String topic(@PathVariable String topicName, String callback) {
+        pageData = new PageData();
 
         Topic topic = service.getTopic(topicName);
         JSONObject jsonObject = new JSONObject();
@@ -84,15 +85,14 @@ public class TopicsApi extends AbstractApi {
         jsonObject.put("UnderReplicatedPartitions", Arrays.toString(topic.getUnderReplicatedPartitions().stream().mapToInt(p -> p.getId()).toArray()));
 
         pageData.setData(jsonObject);
-
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
     public String create(String topic,
                          int replicaFactor,
                          int partitions, String callback) {
-
+        pageData = new PageData();
         try {
             topicService.createTopic(topic, Integer.valueOf(partitions)
                     , replicaFactor);
@@ -102,13 +102,13 @@ public class TopicsApi extends AbstractApi {
             pageData.setError(e.getMessage());
             logger.error("添加topic异常", e);
         }
-
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String delete(String topic, String callback) {
+        pageData = new PageData();
         topicService.deleteTopic(topic);
-        return formatData(callback);
+        return formatData(callback, pageData);
     }
 }
