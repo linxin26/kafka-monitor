@@ -35,8 +35,6 @@ public class MetricsReportService {
     private static Map<String, ArrayList> rateMap = new HashMap();
     private static List<String> timeList = new ArrayList<>();
     private static MetricsReportService metricsReportService = null;
-    //private static DBUtils dbUtils = new DBUtils(KafkaMonitorData.class);
-    private static MetricsDataPersist persist=new MetricsDataPersist();
 
     private MetricsReportService() {
 
