@@ -19,7 +19,7 @@
         <log4j_version>1.2.16</log4j_version>
         <logback_version>1.0.6</logback_version>
         <curator.version>2.10.0</curator.version>
-        <mysql.version>8.0.16</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <junit.version>4.13.1</junit.version>
         <kafka_client.version>0.10.0.1</kafka_client.version>
         <kafka.version>0.10.0.1</kafka.version>
